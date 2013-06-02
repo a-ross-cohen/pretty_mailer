@@ -29,17 +29,25 @@ module PrettyMailer
   def apply_inline_styles response, stylesheets
     doc = Nokogiri::HTML response[:body]
     [*stylesheets].each do |stylesheet|
-      parsed_css( stylesheet ).each_selector do |selector, declarations, specificity|
-        doc.css( selector ).each do |tag|
-          if tag['style'].blank?
-            tag['style'] = "#{ declarations }"
-          else
-            declarations.split( ';' ).each do |rule|
-              tag['style'] = tag['style'].sub /#{rule.split(':').first.strip}:\s*[a-z0-9]+\s*;/i, rule
-            end
-          end
+      parsed_css(stylesheet).each_selector do |selector, declarations, specificity|
+        doc.css(selector).each do |tag|
+          tag['specificities'] = "#{tag['specificities']};#{specificity}"
+          tag[specificity.to_s] = declarations
         end
       end
+    end
+    doc.xpath("//*[@specificities]").each do |tag|
+      tag['specificities'].split(';').sort.each do |specificity|
+        if tag['style'].blank?
+          tag['style'] = "#{ tag[specificity] }"
+        else
+          tag[specificity].split( ';' ).each do |rule|
+            tag['style'] = tag['style'].sub /#{rule.split(':').first.strip}:\s*[a-z0-9]+\s*;/i, rule
+          end
+        end
+        tag.delete specificity
+      end
+      tag.delete 'specificities'
     end
     response[:body] = doc.to_s
     response
@@ -47,7 +55,7 @@ module PrettyMailer
   
   def parsed_css stylesheet
     parser = CssParser::Parser.new
-    parser.load_string! Rails.application.assets.find_asset( stylesheet ).to_s
+    parser.load_string! Rails.application.assets.find_asset(stylesheet).to_s
     parser
   end
   
