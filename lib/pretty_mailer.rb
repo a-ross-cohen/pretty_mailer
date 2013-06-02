@@ -27,7 +27,7 @@ module PrettyMailer
   end
   
   def apply_inline_styles response, stylesheets
-    body = PrettyMailer::HTML.new response[:body]
+    body = HTML.new response[:body]
     [*stylesheets].each do |stylesheet|
       AssetParser.new(name: stylesheet).each_selector do |selector, declarations, specificity|
         body.add_rules selector, declarations, specificity
