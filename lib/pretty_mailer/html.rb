@@ -16,8 +16,7 @@ module PrettyMailer
             tag[specificity.to_s] = declarations.gsub /\s+/, ''
           end
         rescue Exception => Nokogiri::CSS::SyntaxError
-          Rails.logger.debug e
-          Rails.logger.debug selector
+          Rails.logger.debug "Ignoring invalid selector: #{selector}"
         end
       end
     end
@@ -51,11 +50,9 @@ module PrettyMailer
       end
     
       def merge_in_styles tag, specificity
-        if tag[specificity]
-          tag[specificity].split(';').each do |rule|
-            tag['style'] = tag['style'].sub /#{rule.split(':').first.strip}:\s*[a-z0-9]+\s*;/i, "#{rule};"
-            tag['style'] += "#{rule};" unless $~
-          end
+        tag[specificity].split(';').each do |rule|
+          tag['style'] = tag['style'].sub /#{rule.split(':').first.strip}:\s*[a-z0-9]+\s*;/i, "#{rule};"
+          tag['style'] += "#{rule};" unless $~
         end
       end
     

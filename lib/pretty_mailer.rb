@@ -7,9 +7,7 @@ module PrettyMailer
   class << self
     
     def included base
-      base.class_eval do
-        alias_method_chain :collect_responses_and_parts_order, :inline_styles
-      end
+      base.alias_method_chain :collect_responses_and_parts_order, :inline_styles
     end
     
   end
