@@ -50,9 +50,11 @@ module PrettyMailer
       end
     
       def merge_in_styles tag, specificity
-        tag[specificity].split(';').each do |rule|
-          tag['style'] = tag['style'].sub /#{rule.split(':').first.strip}:\s*[a-z0-9]+\s*;/i, "#{rule};"
-          tag['style'] += "#{rule};" unless $~
+        if tag[specificity]
+          tag[specificity].split(';').each do |rule|
+            tag['style'] = tag['style'].sub /#{rule.split(':').first.strip}:\s*[a-z0-9]+\s*;/i, "#{rule};"
+            tag['style'] += "#{rule};" unless $~
+          end
         end
       end
     
