@@ -15,7 +15,7 @@ module PrettyMailer
             tag['specificities'] = "#{tag['specificities']}#{specificity};"
             tag[specificity.to_s] = declarations.gsub /\s+/, ''
           end
-        rescue Exception => Nokogiri::CSS::SyntaxError
+        rescue Nokogiri::CSS::SyntaxError
           Rails.logger.debug "Ignoring invalid selector: #{selector}"
         end
       end
