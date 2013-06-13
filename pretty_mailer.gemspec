@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = PrettyMailer::VERSION
   spec.authors       = ["Adam Ross Cohen"]
   spec.email         = ["a.ross.cohen@gmail.com"]
-  spec.description   = %q{pretty_mailer lets you use stylesheets to apply inline styles to emails.}
-  spec.summary       = %q{}
-  spec.homepage      = ""
+  spec.description   = %q{PrettyMailer lets you use stylesheets to apply inline styles to emails.}
+  spec.summary       = %q{Apply stylesheets to your rails mailers. PrettyMailer uses sprockets to find and parse your stylesheets, which it then applies inline to the emails HTML part. It takes css selector specificity into account, so your styles are applied as they would be with a modern web browser, taking the proper order of precedence.}
+  spec.homepage      = "https://github.com/a-ross-cohen/pretty_mailer"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
