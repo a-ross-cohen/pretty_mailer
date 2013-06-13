@@ -14,11 +14,13 @@ module PrettyMailer
   
   def collect_responses_and_parts_order_with_inline_styles headers
     responses, parts_order = collect_responses_and_parts_order_without_inline_styles headers
-    responses.map! do |response|
-      if response[:content_type] == 'text/html'
-        apply_inline_styles response, headers[:css]
-      else
-        response
+    unless headers[:css].blank?
+      responses.map! do |response|
+        if response[:content_type] == 'text/html'
+          apply_inline_styles response, headers[:css]
+        else
+          response
+        end
       end
     end
     [responses, parts_order]

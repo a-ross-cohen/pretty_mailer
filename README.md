@@ -1,6 +1,6 @@
 # PrettyMailer
 
-Apply stylesheets to your emails.
+Apply stylesheets to your rails mailers. PrettyMailer uses sprockets to find and parse your stylesheets, which it then applies inline to the emails HTML part. It takes css selector specificity into account, so your styles are applied as they would be with a modern web browser, taking the proper order of precedence.
 
 ## Installation
 
