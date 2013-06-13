@@ -6,7 +6,9 @@ module PrettyMailer
     
     def initialize options
       super options
-      load_string! Rails.application.assets.find_asset(options[:name]).to_s
+      options[:stylesheets].each do |stylesheet|
+        load_string! Rails.application.assets.find_asset(stylesheet).to_s
+      end
       self
     end
     

@@ -28,10 +28,8 @@ module PrettyMailer
   
   def apply_inline_styles response, stylesheets
     body = HTML.new response[:body]
-    [*stylesheets].each do |stylesheet|
-      AssetParser.new(name: stylesheet).each_selector do |selector, declarations, specificity|
-        body.add_rules selector, declarations, specificity
-      end
+    AssetParser.new(stylesheets: [*stylesheets]).each_selector do |selector, declarations, specificity|
+      body.add_rules selector, declarations, specificity
     end
     body.reduce_specificities!
     response[:body] = body.to_s

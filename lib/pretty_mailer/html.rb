@@ -9,21 +9,26 @@ module PrettyMailer
     end
     
     def add_rules selector, declarations, specificity
-      @doc.css(selector).each do |tag|
-        tag['specificities'] = "#{tag['specificities']}#{specificity};"
-        tag[specificity.to_s] = declarations
+      if selector =~ /^[\.\#a-z]/i
+        begin
+          @doc.css(selector).each do |tag|
+            tag['specificities'] = "#{tag['specificities']}#{specificity};"
+            tag[specificity.to_s] = declarations.gsub /\s+/, ''
+          end
+        rescue Exception => Nokogiri::CSS::SyntaxError
+          Rails.logger.debug e
+          Rails.logger.debug selector
+        end
       end
     end
     
     def reduce_specificities!
-      @doc.xpath("//*[@specificities]").each do |tag|
-        tag['specificities'].split(';').sort.each do |specificity|
+      tags_with_specificities.each do |tag|
+        specificities_on_tag(tag).each do |specificity|
           if tag['style'].blank?
             tag['style'] = "#{ tag[specificity] }"
           else
-            tag[specificity].split(';').each do |rule|
-              tag['style'] = tag['style'].sub /#{rule.split(':').first.strip}:\s*[a-z0-9]+\s*;/i, rule
-            end
+            merge_in_styles tag, specificity
           end
           tag.delete specificity
         end
@@ -34,6 +39,25 @@ module PrettyMailer
     def to_s
       @doc.to_s
     end
+    
+    private
+    
+      def tags_with_specificities
+        @doc.xpath '//*[@specificities]'
+      end
+    
+      def specificities_on_tag tag
+        tag['specificities'].split(';').sort
+      end
+    
+      def merge_in_styles tag, specificity
+        if tag[specificity]
+          tag[specificity].split(';').each do |rule|
+            tag['style'] = tag['style'].sub /#{rule.split(':').first.strip}:\s*[a-z0-9]+\s*;/i, "#{rule};"
+            tag['style'] += "#{rule};" unless $~
+          end
+        end
+      end
     
   end
   

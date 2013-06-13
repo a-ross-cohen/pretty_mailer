@@ -1,6 +1,6 @@
 # PrettyMailer
 
-TODO: Write a gem description
+Apply stylesheets to your emails.
 
 ## Installation
 
@@ -18,7 +18,21 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+class ExampleMailer < ActionMailer::Base
+  include PrettyMailer # include the module in your mailer
+  
+  # you can specify a default style for the whole mailer
+  default css: 'email.css'
+  # or, you can optionally pass a whole array of stylesheets
+  default css: ['email.css', 'other_styles.css']
+  
+  def foomail
+    # you can also specify stylesheets per email
+    mail to: 'some@one.com' from: 'another@guy.com', subject: 'Pretty mailer is awesome', css: 'awesome.css' # array syntax works here too
+  end
+end
+```
 
 ## Contributing
 
