@@ -29,7 +29,12 @@ class ExampleMailer < ActionMailer::Base
   
   def foomail
     # you can also specify stylesheets per email
-    mail to: 'some@one.com' from: 'another@guy.com', subject: 'Pretty mailer is awesome', css: 'awesome.css' # array syntax works here too
+    mail({
+      to: 'some@one.com',
+      from: 'another@guy.com',
+      subject: 'Pretty mailer is awesome',
+      css: 'awesome.css' # array syntax works here too [ 'one.css', 'two.css', ... ]
+    })
   end
 end
 ```
