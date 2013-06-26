@@ -13,7 +13,7 @@ module PrettyMailer
         begin
           @doc.css(selector).each do |tag|
             tag['specificities'] = "#{tag['specificities']}#{specificity};"
-            tag[specificity.to_s] = declarations.gsub /\s+/, ''
+            tag[specificity.to_s] = declarations.squeeze ' '
           end
         rescue Nokogiri::CSS::SyntaxError
           Rails.logger.debug "Ignoring invalid selector: #{selector}"
@@ -25,7 +25,7 @@ module PrettyMailer
       tags_with_specificities.each do |tag|
         specificities_on_tag(tag).each do |specificity|
           if tag['style'].blank?
-            tag['style'] = "#{ tag[specificity] }"
+            tag['style'] = tag[specificity]
           else
             merge_in_styles tag, specificity
           end
